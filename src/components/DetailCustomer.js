@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer } from 'react';
 import {TableBody, Table, TableCell, TableRow} from "@mui/material";
 import {useParams} from 'react-router-dom';
-import {axios} from 'axios';
+import axios from 'axios'; //axios는 그 자체가 객체기때문에 중괄호 아님~~~!!!!!!!!
 
 const initialState = {
     loading: false,
@@ -44,7 +44,7 @@ const DetailCustomer = () => {
     const fetchDetailview = async ()=>{
         dispatch({type:"LOADING"});
         try{
-            const res = await axios.get(`http://localhost:3001/detailview/:${id}`)
+            const res = await axios.get(`http://localhost:3001/detailview/${id}`);
             dispatch({type:"SUCCESS", data: res.data})
         }
         catch(e){
@@ -53,8 +53,10 @@ const DetailCustomer = () => {
         }
     }
     useEffect(()=>{fetchDetailview()},[]);
+
     const [state, dispatch] = useReducer(reducer,initialState);
     const {loading, data, error} = state;
+    console.log(data);
 
     if(loading) return <div>로딩중~~~</div>
     if(error) return <div>에러..</div>

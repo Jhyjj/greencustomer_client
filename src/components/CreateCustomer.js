@@ -3,8 +3,10 @@ import {Table, TableBody, TableRow, TableCell} from '@mui/material';
 import PopupDom from "./PopupDom";
 import PopupPostCode from "./PopupPostCode";
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const CreateCustomer = () => {
+    const navigate = useNavigate();
 
     //우편번호 관리하기
     const onAddData = (data)=>{
@@ -53,19 +55,33 @@ const CreateCustomer = () => {
         //원래 연결된 이벤트를 제거(원래 form태그가 가지고 있는 이벤트를 초기화해주는것)
         e.preventDefault();
         console.log(formData);
+
+        //전화번호는 숫자만 입력받고 싶음
+        if(isNaN(formData.c_phone)){
+            alert("전화번호는 숫자만 입력해주세요");
+            setFormData({
+                ...formData,
+                c_phone: ""
+            })
+        }
         //input에 값이 다 있는지 체크하고
         //입력이 다 되어있으면 post전송
-        if(formData.c_name && formData.c_phone && formData.c_birth && formData.c_gender && formData.c_add && formData.c_adddetail){
-            insertCustomer();
-        }
+        if(formData.c_name !== "" &&
+         formData.c_phone !=="" &&
+         formData.c_birth !=="" &&
+         formData.c_gender !=="" &&
+         formData.c_add !=="" &&
+         formData.c_adddetail !=="")
+         {insertCustomer();}
 
     }
 
     function insertCustomer(){
         //데이터 입력할땐 post전송
-        axios.post('http://localhost:3001/customers',formData)
+        axios.post('http://localhost:3001/insertCustomer',formData)
         .then(result=>{
             console.log(result);
+            navigate('/'); //성공하면 메인으로 넘겨주기
         })
         .catch(e=>{
             console.log(e);
